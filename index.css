@@ -1,0 +1,36 @@
+body {
+    background-image: url("path/to/your/image.jpg"); /* Replace with your image path */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+  .accent-color {
+    color: #450707; /* Replace with your desired color code */
+  }
+  
+  h1 {
+    color: var(--accent-color);
+  }
+  
+  .join-button {
+    background-color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+  }
+  
+  .event-box:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) inset, 0 0 0 2px var(--accent-color);
+  }
+  .event-box {
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.8)); /* Subtle gradient */
+  }
+  h1 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2em;
+  }
+  
+  .event-details {
+    font-family: 'Arial', sans-serif;
+  }
+    

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Display</title>
+
+<style>
+.event-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  position: relative; /* Needed for hover effects */
+
+}
+
+
+.event-box:hover {
+  transform: scale(1.02); /* Slight zoom on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Increased shadow */
+}
+
+
+.event-details {
+  margin-bottom: 10px;
+}
+
+.join-button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.join-button:hover {
+  background-color: #0056b3;
+}
+body {
+  background-image: url("path/to/your/image.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+}
+h1 {
+  color: #fff;
+}
+.event-details {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+h1, h2 {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+}
+#eventsList {
+  
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.gotohost:hover {
+    box-shadow: 0 2px 4px -1px #0056b3,0 px 8px -2px #0056b3;
+    font-size: 20px;
+    color: #0056b3;
+}
+
+
+</style>
+</head>
+<body>
+  <div class="nav-bar" style="display: flex;  background-color:  #003f06; justify-content: space-between;">
+    <h1 style="text-align: center; margin-left: 580px;">Events List</h1>
+    <button class="gotohost" onclick="redirectToPage()" style="padding-left: 35px; padding-right: 35px; margin-top: 20px; margin-bottom:20px; margin-right: 100px; border: 1px solid black; border-radius: 20px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-size: 18px;">Host an event</button>
+  </div>
+<div id="eventsList" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+</div>
+<script>
+  // Function to register for an event
+ // Function to request registration for an event
+// Fetch events from the server
+fetch('http://localhost:3000/events')
+    .then(response => response.json())
+    .then(data => {
+        const eventsList = document.getElementById('eventsList');
+        data.forEach(event => {
+            const eventBox = document.createElement('div');
+
+            eventBox.classList.add('event-box');
+            const imageUrl = `path/to/images/${encodeURIComponent(event.event_image)}`;
+
+            eventBox.innerHTML = `
+                <div class="event-details">
+                    <img src="${imageUrl}" alt="Event Image" style="max-width: 100%; height: auto;">
+                    <h2 style="margin-bottom: 5px;">${event.title}</h2>
+                    <p><strong>Category:</strong> ${event.category}</p>
+                    <p><strong>Description:</strong> ${event.description}</p>
+                    <p><strong>Date:</strong> ${new Date(event.start_date).toDateString()}</p>
+                    <p><strong>Time:</strong> ${event.start_time}</p>
+                    <p><strong>Location:</strong> ${event.city}, ${event.address}</p>
+                    <p><strong>Max Participants:</strong> ${event.max_participants}</p>
+                    <p><strong>Min Age:</strong> ${event.min_age}</p>
+                    <p><strong>Cost:</strong> $${event.approximate_cost}</p>
+                </div>
+            `;
+
+            // Check if the event status is pending or not registered, show the "Request Registration" button
+            if (!event.status || event.status === 'pending') {
+                eventBox.innerHTML += `
+                    <button class="request-registration" onclick="requestRegistration(${event.event_id})">Request Registration</button>
+                `;
+            }
+
+            eventsList.appendChild(eventBox);
+        });
+    })
+    .catch(error => console.error('Error fetching events:', error));
+
+// Function to request registration for an event
+function requestRegistration(eventId) {
+    // Extract userId from the URL or replace it with your actual userId retrieval method
+    const userId = getUserId();
+
+    // Send a POST request to register for the event
+    fetch(`http://localhost:3000/event/${eventId}/register`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            userId: userId
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            // Registration successful, show alert
+            alert("You have successfully registered for the event!");
+        } else if (response.status === 400) {
+            // User is already registered, show alert
+            alert("You are already registered for this event.");
+        } else {
+            // Registration failed, show error message
+            alert("Failed to register for the event. Please try again later.");
+        }
+    })
+    .catch(error => {
+        console.error('Error registering for event:', error);
+        alert("An error occurred while registering for the event. Please try again later.");
+    });
+}
+
+// Function to extract userId from URL query params or replace it with your actual userId retrieval method
+function getUserId() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('userId');
+}
+
+</script>
+</body>
+</html>

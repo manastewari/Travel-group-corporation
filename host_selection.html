@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Selection</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        text-align: center;
+    }
+
+    .button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 15px 30px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .button:hover {
+        background-color: #0056b3;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h2>Select Page</h2>
+        <form action="/select_page" method="post" id="selectPageForm">
+            <input type="radio" id="host" name="page" value="host">
+            <label for="host">Host Page</label><br>
+            <input type="radio" id="index" name="page" value="index">
+            <label for="index">Index Page</label><br>
+            <input type="radio" id="dashboard" name="page" value="dashboard">
+            <label for="dashboard">User Dashboard</label><br> <!-- Added user dashboard option -->
+            <!-- Hidden input field to store userId -->
+            <input type="hidden" name="userId" id="userIdInput">
+            <button class="button" type="submit">Submit</button>
+        </form>
+    </div>
+    
+    <script>
+        // Function to get query parameter value from URL
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+    
+        // Get userId from the URL query parameters
+        var userId = getParameterByName('userId');
+    
+        // Set the userId value to the hidden input field
+        document.getElementById("userIdInput").value = userId;
+    </script>
+    
+    
+</body>
+</html>

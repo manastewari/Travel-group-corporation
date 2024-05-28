@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Management</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .container {
+        text-align: center;
+    }
+
+    .button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 15px 30px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .button:hover {
+        background-color: #0056b3;
+    }
+
+    .button:first-child {
+        background-color: #28a745;
+    }
+
+    .button:first-child:hover {
+        background-color: #218838;
+    }
+
+    .button span {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .button .icon {
+        margin-right: 10px;
+    }
+
+    .form-container {
+        margin-top: 20px;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="email"],
+    .form-container input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        box-sizing: border-box;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="form-container" id="create-username-form" style="display: none;">
+        <h2>Create Username</h2>
+        <form action="/register" method="post">
+            <input type="text" name="name" placeholder="Your Name" required><br><br>
+            <input type="email" name="email" placeholder="Your Email" required><br><br>
+            <input type="password" name="password" placeholder="Your Password" required><br><br>
+            <input type="submit" class="button" value="Create Username">
+        </form>
+        <p>Already have an account? <a href="#" onclick="showLoginForm(); return false;">Login</a></p>
+    </div>
+
+    <div class="form-container" id="login-form">
+        <h2>Login</h2>
+        <form action="/login" method="post">
+            <input type="email" name="email" placeholder="Your Email" required><br><br>
+            <input type="password" name="password" placeholder="Your Password" required><br><br>
+            <input type="submit" class="button" value="Login">
+        </form>        
+        <p>Don't have an account? <a href="#" onclick="showCreateUsernameForm(); return false;">Create username</a></p>
+    </div>
+</div>
+
+
+
+<script>
+    function showCreateUsernameForm() {
+        var createUsernameForm = document.getElementById('create-username-form');
+        var loginForm = document.getElementById('login-form');
+
+        if (createUsernameForm.style.display === 'none') {
+            createUsernameForm.style.display = 'block';
+            loginForm.style.display = 'none';
+        } else {
+            createUsernameForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        }
+    }
+
+    function showLoginForm() {
+        var createUsernameForm = document.getElementById('create-username-form');
+        var loginForm = document.getElementById('login-form');
+
+        if (loginForm.style.display === 'none') {
+            loginForm.style.display = 'block';
+            createUsernameForm.style.display = 'none';
+        } else {
+            loginForm.style.display = 'none';
+            createUsernameForm.style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>

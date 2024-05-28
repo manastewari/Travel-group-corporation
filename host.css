@@ -1,0 +1,45 @@
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #F3F8FF;
+}
+.half {
+    display: flex;
+    align-items: baseline;
+    gap: 80px;
+}
+.ed,.dt,.loc,.req,.other {
+    display: flex;
+    gap: 80px;
+    align-items: baseline;
+    margin-bottom: 20px;
+}
+.card {
+    padding: 0px 50px 10px 50px;
+    border-radius: 24px;
+}
+input, textarea, select {
+    margin-top: 2px;
+    padding: 10px 20px 10px 20px;
+    border-radius: 12px;
+    border: 1px solid lightgray;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+}
+.sub-btn {
+    border: 1px solid #725AC1;
+    font-size: 18px;
+    padding: 15px 30px 15px 30px;
+    background-color: #F3F8FF;
+    margin-left: 180px;
+}
+.t {
+    font-size: 18px;
+    font-weight: 500;
+}
+.sub-btn:hover {
+    color: white;
+    box-shadow: inset 0 -100px 0 0 #725AC1;
+  }
+.sub-btn:active {
+    transform: scale(0.9);
+  }

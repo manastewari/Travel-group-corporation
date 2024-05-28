@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+</head>
+<body>
+    <h1>Hosted Events</h1>
+    <ul id="hosted-events-list"></ul>
+
+    <h1>Joined Events</h1>
+    <ul id="joined-events-list"></ul>
+
+    <script>
+ // Function to display hosted events
+// Function to display hosted events
+// Function to display hosted events
+function displayHostedEvents(hostedEvents) {
+    const hostedEventsList = document.getElementById('hosted-events-list');
+    hostedEvents.forEach(event => {
+        const listItem = document.createElement('li');
+        let removeEventButton = ''; // Define removeEventButton here
+
+        let joinersHTML = '';
+
+        let acceptAllButton = ''; // Define acceptAllButton here
+
+        // Check if there are joiners
+        if (event.joiner_usernames && event.joiner_emails && event.joiner_ids) {
+            const joinerUsernames = event.joiner_usernames.split(',');
+            const joinerEmails = event.joiner_emails.split(',');
+            const joinerIds = event.joiner_ids.split(',');
+
+            // Check if there are more than one joiners
+            const multipleJoiners = joinerUsernames.length > 1;
+            
+            if (multipleJoiners) {
+                acceptAllButton = `<button onclick="acceptAllJoiners(${event.event_id})">Accept All Joiners</button>`;
+            }
+
+            for (let i = 0; i < joinerUsernames.length; i++) {
+                joinersHTML += `
+                    <div>
+                        <p><strong>ID:</strong> ${joinerIds[i]}</p>
+                        <p><strong>Name:</strong> ${joinerUsernames[i]}</p>
+                        <p><strong>Email:</strong> ${joinerEmails[i]}</p>
+                        <button onclick="acceptJoiner(${event.event_id}, ${joinerIds[i]})">Accept</button>
+                        <button onclick="removeJoiner(${event.event_id}, ${joinerIds[i]})">Remove</button>
+                    </div>
+                `;
+            }
+        }
+        removeEventButton = `<button onclick="removeEvent(${event.event_id})">Remove Event</button>`;
+
+        // Create HTML for event details including the accept all button if applicable
+        listItem.innerHTML = `
+            <strong>${event.title}</strong>
+            <p>${event.description}</p>
+            <p>Date: ${event.start_date} to ${event.end_date}</p>
+            ${removeEventButton} <!-- Display the Remove Event button -->
+            ${joinersHTML}
+            ${acceptAllButton} <!-- Display the Accept All button only if there are multiple joiners -->
+        `;
+        
+        // Append the list item to the hosted events list
+        hostedEventsList.appendChild(listItem);
+    });
+}
+
+// Function to remove an event
+function removeEvent(eventId) {
+    // Perform the logic to remove the event with the given eventId
+    // Assuming you have an endpoint for removing events
+    fetch('/remove-event', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            eventId: eventId
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            // Event removed successfully
+            console.log(`Event with ID ${eventId} removed successfully`);
+            // Optionally, you can update the UI or take any additional actions
+        } else {
+            // Error occurred while removing event
+            console.error(`Failed to remove event with ID ${eventId}`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+
+// Function to handle accepting all joiners for an event
+function acceptAllJoiners(eventId) {
+    fetch('/accept-all-joiners', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ eventId })
+    })
+    .then(response => {
+        if (response.ok) {
+            // Reload the page or update UI as needed
+            location.reload(); // Reload the page to reflect the changes
+        } else {
+            console.error('Failed to accept all joiners');
+        }
+    })
+    .catch(error => {
+        console.error('Error accepting all joiners:', error);
+    });
+}
+// Function to handle accepting a joiner
+// Function to handle accepting a joiner
+function acceptJoiner(eventId, joinerId) {
+    fetch('/accept-joiner', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ eventId, joinerId })
+    })
+    .then(response => {
+        if (response.ok) {
+            // Update UI to show only remove option
+            const acceptButton = document.getElementById(`accept-button-${eventId}-${joinerId}`);
+            const removeButton = document.getElementById(`remove-button-${eventId}-${joinerId}`);
+            if (acceptButton && removeButton) {
+                acceptButton.style.display = 'none'; // Hide accept button
+                removeButton.style.display = 'inline-block'; // Show remove button
+            }
+            // Reload the page to reflect the changes
+            location.reload();
+        } else {
+            console.error('Failed to accept joiner');
+        }
+    })
+    .catch(error => {
+        console.error('Error accepting joiner:', error);
+    });
+}
+
+
+// Add event listener to accept joiner buttons
+document.addEventListener('DOMContentLoaded', () => {
+    const acceptButtons = document.querySelectorAll('.accept-button');
+    acceptButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const eventId = button.dataset.eventId;
+            const joinerId = button.dataset.joinerId;
+            acceptJoiner(eventId, joinerId);
+        });
+    });
+});
+
+
+// Function to remove a joiner
+function removeJoiner(eventId, joinerId) {
+    fetch('/remove-joiner', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ eventId, joinerId })
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Joiner removed successfully!');
+            // You can update the UI as needed
+        } else {
+            alert('Failed to remove joiner. Please try again later.');
+        }
+    })
+    .catch(error => {
+        console.error('Error removing joiner:', error);
+        alert('An error occurred while removing joiner. Please try again later.');
+    });
+}
+
+function displayJoinedEvents(joinedEvents) {
+    const joinedEventsList = document.getElementById('joined-events-list');
+    joinedEvents.forEach(event => {
+        const listItem = document.createElement('li');
+
+        // Determine status and set appropriate color
+        let statusColor;
+        if (event.status === 'pending') {
+            statusColor = 'orange';
+        } else if (event.status === 'accepted') {
+            statusColor = 'green';
+        } else {
+            statusColor = 'red';
+        }
+
+        listItem.innerHTML = `
+            <div>
+                <h2 style="color: ${statusColor};">${event.title}</h2>
+                <p><strong>Category:</strong> ${event.category}</p>
+                <p><strong>Description:</strong> ${event.description}</p>
+                <p><strong>Date:</strong> ${event.start_date}</p>
+                <p><strong>Status:</strong> ${event.status}</p>
+                <button class="remove-btn" data-event-id="${event.event_id}">remove</button>
+            </div>
+        `;
+        joinedEventsList.appendChild(listItem);
+
+        // Add event listener to remove button
+        const removeButton = listItem.querySelector('.remove-btn');
+        removeButton.addEventListener('click', () => {
+            const eventId = removeButton.getAttribute('data-event-id');
+            const userId = getUserIdFromQuery();
+
+            // Send POST request to remove user from event
+            fetch(`/event/${eventId}/remove/${userId}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (response.ok) {
+                    // If removal is successful, remove the event from the list
+                    listItem.remove();
+                } else {
+                    console.error('Error removing user from event:', response.statusText);
+                }
+            })
+            .catch(error => console.error('Error removing user from event:', error));
+        });
+    });
+}
+
+
+// Function to extract userId from URL query params
+function getUserIdFromQuery() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('userId');
+}
+
+// Fetch data from the server when the page loads
+window.addEventListener('DOMContentLoaded', () => {
+            const userId = getUserIdFromQuery();
+
+            // Fetch dashboard data from the server
+            fetch(`/dashboard/data?userId=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Fetched Data:', data);
+
+                    // Update the HTML content with fetched data
+                    displayHostedEvents(data.hostedEvents);
+                    displayJoinedEvents(data.joinedEvents);
+                })
+                .catch(error => console.error('Error fetching dashboard data: ', error));
+        });
+    </script>
+</body>
+</html>

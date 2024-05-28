@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="host.css">
+</head>
+<body>
+    <style>
+        body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #F3F8FF;
+}
+.half {
+    display: flex;
+    align-items: baseline;
+    gap: 80px;
+}
+.ed,.dt,.loc,.req,.other {
+    display: flex;
+    gap: 80px;
+    align-items: baseline;
+    margin-bottom: 20px;
+}
+.card {
+    padding: 0px 50px 10px 50px;
+    border-radius: 24px;
+}
+input, textarea, select {
+    margin-top: 2px;
+    padding: 10px 20px 10px 20px;
+    border-radius: 12px;
+    border: 1px solid lightgray;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+}
+.sub-btn {
+    border: 1px solid #725AC1;
+    font-size: 18px;
+    padding: 15px 30px 15px 30px;
+    background-color: #F3F8FF;
+    margin-left: 180px;
+}
+.t {
+    font-size: 18px;
+    font-weight: 500;
+}
+.sub-btn:hover {
+    color: white;
+    box-shadow: inset 0 -100px 0 0 #725AC1;
+  }
+.sub-btn:active {
+    transform: scale(0.9);
+  }
+    </style>
+    <div class="card"> 
+        <p style="letter-spacing: 1px; color: #725AC1; font-size: 30px; font-weight: 500; margin-top: -2px;">Hosting an event?</p>
+        <div class="half">
+        <div class="half1">
+            <form id="eventForm" action="" method="POST"> <!-- Leave action empty for now -->
+            <div class="ed">
+            <label for="" class="t">Event details</label>
+            <div>
+                <label for="event-title">Title:</label> <br>
+                <input type="text" id="event-title" name="event-title" placeholder="Ex. Bangalore trip"><br>
+                <label for="category">Choose a category:</label><br>
+                <select id="category" name="category">
+                    <option value="travel">Travel</option>
+                    <option value="study">Study</option>
+                    <option value="fitness">Fitness</option>
+                    <option value="social">Social</option>
+                    <option value="volunteer">Volunteer</option>
+                    <option value="sports">Sports</option>
+                    <option value="art">Arts and Culture</option>
+                </select><br>
+                <label for="desc">Description:</label><br>
+                <textarea rows="4" cols="50" id="desc" placeholder="Ex. We will go to by rental car and..."></textarea><br>
+            </div>
+            </div>
+            <div class="dt">
+                <label for="" class="t">Date and Time</label>
+                <div>
+                    <label for="start-d">Start date:</label><br>
+                    <input type="date" id="start-d" name="start-d"><br>
+                    <label for="end-d">End date:</label><br>
+                    <input type="date" id="end-d" name="end-d"><br>
+                    <label for="start-t">Start time:</label><br>
+                    <input type="time" id="start-t" name="start-t"><br>
+                </div>
+            </div>
+            <div class="loc">
+                <label for="" class="t">Location</label>
+                <div>
+                    <label for="city">Starting Location or City:</label><br>
+                    <input type="text" id="city" name="city" placeholder="Ex. Chennai"><br>
+                    <label for="add">Address or Meeting point:</label><br>
+                    <input type="text" id="add" name="add" placeholder="Ex. Chennai"><br>
+                    <label>
+                        <input type="checkbox" id="showadd" name="showadd">
+                        Share address only with confirmed participants
+                    </label><br>
+                </div>
+            </div>
+        </div>
+        <div class="half2">
+            <div class="req">
+                <label for="" class="t">Requirements</label>
+                <div>
+                    <label for="quantity">Maximum number of participants:</label><br>
+                    <input type="number" id="quantity" name="quantity" min="2"><br>
+                    <label for="age">Minimum age:</label><br>
+                    <input type="number" id="age" name="age" min="16"><br>
+                    <label for="other-req">Other requirements</label><br>
+                    <textarea rows="4" cols="50" name="other-req" placeholder="Ex. Individuals should have a moderate level of physical fitness..."></textarea><br>
+                </div>
+            </div>
+            <div class="other">
+                <label for="" class="t">Additional</label>
+                <div>
+                    <label for="cost">Approximate cost per person:</label><br>
+                    <input type="number" id="cost" name="cost" min="0"><br>
+                    <label for="rules">Additional rules or guidelines:</label><br>
+                    <textarea rows="4" cols="50" name="desc" placeholder="Ex. Individuals should maintain decorum..."></textarea><br>
+                    <label for="event-img">Upload event image:</label><br>
+                    <input type="file" id="event-img" name="event-img" accept="image/*" style="border: none;">
+                </div>
+            </div>
+            <input type="submit" value="Submit" class="sub-btn">
+        </form>
+        </div>
+        </div>
+        
+    </div>
+    <script>
+         document.addEventListener('DOMContentLoaded', function() {
+            const eventForm = document.getElementById('eventForm');
+            const userId = getUserId(); // Call getUserId() to get the user ID
+
+            if (userId) {
+                const formAction = '/submit-form?userId=' + userId;
+                eventForm.action = formAction; // Set the form action with user ID
+            }
+        });
+
+        function getUserId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('userId');
+            console.log(userId + " ")
+            return userId;
+        }
+        </script>
+</body>
+</html>
